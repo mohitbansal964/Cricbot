@@ -61,20 +61,23 @@ def espn_scrape():
 		soup=BeautifulSoup(r.content,"html5lib")
 		matches=soup.findAll("section",class_="default-match-block")
 		for match in matches:
-			preview=match.find('div',class_='innings-info-1')
-			if preview.find('span').text=="":
-				continue
-			d={}
-			d['flag']=1
-			d['team_score1']=preview.text.strip().replace("    "," ")
-			d['team_score2']=match.find('div',class_='innings-info-2').text.strip().replace("    "," ")
-			d['result']=match.find('div',class_="match-status").text.strip()
-			d['team1']=d['team_score1'].strip(match.find('div',class_='innings-info-1').find('span').text)
-			d['team2']=d['team_score2'].strip(match.find('div',class_='innings-info-2').find('span').text)
-			d['scorecard_url']=match.find('a')['href'].replace('game','scorecard')
-			d['commentary_url']=match.find('a')['href'].replace('game','commentary')
-			d['match_facts_url']=match.find('a')['href']
-			l.append(d)
+			try:
+				preview=match.find('div',class_='innings-info-1')
+				if preview.find('span').text=="":
+					continue
+				d={}
+				d['flag']=1
+				d['team_score1']=preview.text.strip().replace("    "," ")
+				d['team_score2']=match.find('div',class_='innings-info-2').text.strip().replace("    "," ")
+				d['result']=match.find('div',class_="match-status").text.strip()
+				d['team1']=d['team_score1'].strip(match.find('div',class_='innings-info-1').find('span').text)
+				d['team2']=d['team_score2'].strip(match.find('div',class_='innings-info-2').find('span').text)
+				d['scorecard_url']=match.find('a')['href'].replace('game','scorecard')
+				d['commentary_url']=match.find('a')['href'].replace('game','commentary')
+				d['match_facts_url']=match.find('a')['href']
+				l.append(d)
+			except:
+				pass
 	else:
 		l="Error"
 	return l
@@ -89,34 +92,37 @@ def scrape():
 		matches=soup.findAll(class_="cb-col cb-col-100 cb-lv-main")
 		l=[]
 		for i in range(len(matches)):
-			a=matches[i].findAll("a")
-			if "preview" in a[1]['class'][1]:
-				continue
-			s=matches[i].findAll("span")
-			d={}
-			d['flag']=0
-			teams=a[0].text
-			d['team1']=teams.split(" vs ")[0]
-			d['team2']=teams.split(" vs ")[1].rstrip(",")
-			score=a[1].text.split("\xa0•\xa0")
-			d['team_score1']=score[0].strip()
-			xyz=a[1].find(class_="cb-lv-scrs-col cb-text-live")
-			if xyz:
-				reslt=a[1].find(class_="cb-lv-scrs-col cb-text-live").text
-				team_score2=score[1].replace(reslt," ").strip()
-				d['team_score2']=team_score2
-				d['result']=reslt
-			else:
-				reslt=a[1].find(class_="cb-lv-scrs-col cb-text-complete").text
-				team_score2=score[1].replace(reslt," ").strip()
-				d['team_score2']=team_score2
-				d['result']=reslt
-			if "opt" in d['result']:
-				d['team_score1'],d['team_score2']=d['team_score2'],d['team_score1']
-			d['scorecard_url']="http://www.cricbuzz.com"+a[3]['href']
-			d['commentary_url']="http://www.cricbuzz.com"+a[4]['href']
-			d['match_facts_url']=d['commentary_url'].replace("full-commentary","match-facts")
-			l.append(d)
+			try:
+				a=matches[i].findAll("a")
+				if "preview" in a[1]['class'][1]:
+					continue
+				s=matches[i].findAll("span")
+				d={}
+				d['flag']=0
+				teams=a[0].text
+				d['team1']=teams.split(" vs ")[0]
+				d['team2']=teams.split(" vs ")[1].rstrip(",")
+				score=a[1].text.split("\xa0•\xa0")
+				d['team_score1']=score[0].strip()
+				xyz=a[1].find(class_="cb-lv-scrs-col cb-text-live")
+				if xyz:
+					reslt=a[1].find(class_="cb-lv-scrs-col cb-text-live").text
+					team_score2=score[1].replace(reslt," ").strip()
+					d['team_score2']=team_score2
+					d['result']=reslt
+				else:
+					reslt=a[1].find(class_="cb-lv-scrs-col cb-text-complete").text
+					team_score2=score[1].replace(reslt," ").strip()
+					d['team_score2']=team_score2
+					d['result']=reslt
+				if "opt" in d['result']:
+					d['team_score1'],d['team_score2']=d['team_score2'],d['team_score1']
+				d['scorecard_url']="http://www.cricbuzz.com"+a[3]['href']
+				d['commentary_url']="http://www.cricbuzz.com"+a[4]['href']
+				d['match_facts_url']=d['commentary_url'].replace("full-commentary","match-facts")
+				l.append(d)
+			except:
+				pass
 	else:
 		l=espn_scrape()
 	return l
