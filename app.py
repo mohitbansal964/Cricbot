@@ -166,29 +166,39 @@ def webhook():
 				
 				elif messaging_event.get("postback"):
 					payload=messaging_event['postback']['payload']
-					if payload=="match_detail":
-						data=match_det()
-						if data=="Error":
-							bot.send_text_message(sender_id,"Unable to process your request due to some technical issues. Please try again later.")
-						else:
-							bot.send_generic_message(sender_id,data)
-					elif payload=="live_score":
-						quick_reply=cur_match()[:10]
-						if quick_reply=="Error":
-							bot.send_text_message(sender_id,"Unable to process your request due to some technical issues. Please try again later.")
-						else:
-							bot.send_quickreply(sender_id,HELP_MSG,cur_match()[:10])
-					elif payload=='help':
-						bot.send_text_message(sender_id,"Hello I am Cricbot. I can show you details like live scores and match info of all the ongoing cricket matches.:)")
-						bot.send_text_message(sender_id,"For checking live scores, type 'team_name1 vs team_name2' and you will get live scores of that match.")
-						bot.send_text_message(sender_id,"For match info, type 'team_name1 vs team_name2 match info'.\nAnd for ICC team and player ranking, type <format> ranking.\nFor example: for test cricket ranking, type test ranking. ")
-						bot.send_text_message(sender_id,"If u still need any help, use persistent menu.")
+					try:
+						if payload=="match_detail":
+							data=match_det()
+							if data=="Error":
+								bot.send_text_message(sender_id,"Unable to process your request due to some technical issues. Please try again later.")
+							else:
+								bot.send_generic_message(sender_id,data)
+						elif payload=="live_score":
+							quick_reply=cur_match()[:10]
+							if quick_reply=="Error":
+								bot.send_text_message(sender_id,"Unable to process your request due to some technical issues. Please try again later.")
+							else:
+								bot.send_quickreply(sender_id,HELP_MSG,cur_match()[:10])
+						elif payload=='help':
+							bot.send_text_message(sender_id,"Hello I am Cricbot. I can show you details like live scores and match info of all the ongoing cricket matches.:)")
+							bot.send_text_message(sender_id,"For checking live scores, type 'team_name1 vs team_name2' and you will get live scores of that match.")
+							bot.send_text_message(sender_id,"For match info, type 'team_name1 vs team_name2 match info'.\nAnd for ICC team and player ranking, type <format> ranking.\nFor example: for test cricket ranking, type test ranking. ")
+							bot.send_text_message(sender_id,"If u still need any help, use persistent menu.")
+							button=[{
+							'type':'web_url',
+							'title':"Meet the developer",
+							'url':'https://www.facebook.com/MohitBansal97'
+							}]
+							bot.send_button_message(sender_id,"For any suggestion or query, contact my botmaster",button)
+					except Exception as e:
+						print(e)
 						button=[{
-						'type':'web_url',
-						'title':"Meet the developer",
-						'url':'https://www.facebook.com/MohitBansal97'
+						"type":"postback",
+						"title":"Click here for help",
+						"payload":"help"
 						}]
-						bot.send_button_message(sender_id,"For any suggestion or query, contact my botmaster",button)
+						bot.send_button_message(sender_id, "Sorry, I didn't understand.",button)
+						
 	return "ok", 200
 	
 
