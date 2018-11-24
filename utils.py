@@ -5,11 +5,11 @@ from bs4 import BeautifulSoup
 from datetime import date
 from pymongo import MongoClient
 
-#https://mohit-cricbot.herokuapp.com/
 
-APIAI_ACCESS_TOKEN = "daf07287853741709698f3d64f44b45a"
 
-MONGODB_URI = "mongodb://mohit:mohit@ds233748.mlab.com:33748/cricbot"
+APIAI_ACCESS_TOKEN = ""
+
+MONGODB_URI = ""
 client = MongoClient(MONGODB_URI)
 db = client.get_database("cricbot")
 data = db.data
