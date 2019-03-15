@@ -5,13 +5,10 @@ from bs4 import BeautifulSoup
 from datetime import date
 from pymongo import MongoClient
 
+from config import APIAI_ACCESS_TOKEN, MONGODB_URI, db_name
 
-
-APIAI_ACCESS_TOKEN = ""
-
-MONGODB_URI = ""
 client = MongoClient(MONGODB_URI)
-db = client.get_database("cricbot")
+db = client.get_database(db_name)
 data = db.data
 
 # a help message

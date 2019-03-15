@@ -1,14 +1,13 @@
 from flask import Flask, request
-from pymessenger import Bot
-from utils import fetch_reply, match_det, HELP_MSG,cur_match, data
 import requests,json
 import os
+from pymessenger import Bot
+
+from utils import fetch_reply, match_det, HELP_MSG,cur_match, data
+from config import FB_ACCESS_TOKEN, VERIFICATION_TOKEN
 
 app=Flask("Cricbot")
-FB_ACCESS_TOKEN="EAACIXuHyXOEBAAEWThayhIUc6JCMTZAEynAj9i7I5EjdsAYamR836JcoHheq7WduH4N1wJ2n4kxFifz3ZBTeczJwjQDhZA8cruJi854ykKJX1eQHJO35MxAftOt9Jnc6KvHBNBscXPZBAyyUQkhqVmduNoclIdOlx30c7w71MgZDZD"
 bot=Bot(FB_ACCESS_TOKEN)
-
-VERIFICATION_TOKEN="hello"
 
 @app.route('/',methods=['GET'])
 def verify():
