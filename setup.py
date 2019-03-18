@@ -7,7 +7,7 @@ if sys.version_info < (3,):
 with open('Readme.md', encoding="utf8") as f:
     readme = f.read()
 
-with open('LICENSE') as f:
+with open('LICENSE.txt') as f:
     license = f.read()
 
 with open('requirements.txt') as f:
