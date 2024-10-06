@@ -1,6 +1,6 @@
 import os
 from dotenv import find_dotenv, load_dotenv
-from services.cricbot_service import CricbotService
+from services import CricbotService
 
 # loading the API Keys from .env
 load_dotenv(find_dotenv(), override=True)
