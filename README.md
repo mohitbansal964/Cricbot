@@ -32,7 +32,8 @@ CRICBOT/
 │   ├── main.py
 ├── .env
 ├── .gitignore
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
 ## Setup
