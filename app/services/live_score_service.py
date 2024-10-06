@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Any, List
 import requests
 
-from models.match_details import MatchDetails
-from utils.common_util import clean_team_name, clean_team_names
+from models import MatchDetails
+from utils import clean_team_name, clean_team_names
 
 class LiveScoreService:
     def fetch_live_score(self, team1, team2) -> MatchDetails:

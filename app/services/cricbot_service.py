@@ -1,7 +1,7 @@
-from constants.constants import Constants
-from services.intent_identifier_service import IntentIdentifierService
-from services.live_score_service import LiveScoreService
-from services.response_generator_service import ResponseGeneratorService
+from constants import Constants
+from .intent_identifier_service import IntentIdentifierService
+from .live_score_service import LiveScoreService
+from .response_generator_service import ResponseGeneratorService
 
 
 class CricbotService:

@@ -1,6 +1,6 @@
 
 import os
-from constants.constants import Constants
+from constants import Constants
 
 def clean_team_name(team):
     return team.strip().lower()

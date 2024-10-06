@@ -2,8 +2,8 @@ import json
 from typing import Any, List
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, BaseMessage, HumanMessage
-from constants.constants import Constants
-from utils.common_util import read_prompt_from_file
+from constants import Constants
+from utils import read_prompt_from_file
 
 class IntentIdentifierService:
     def __init__(self, openai_api_key: str):

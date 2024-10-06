@@ -1,9 +1,9 @@
 import json
 from typing import Any, List
 from langchain_openai import ChatOpenAI
-from constants.constants import Constants
-from models.match_details import MatchDetails
-from utils.common_util import read_prompt_from_file
+from constants import Constants
+from models import MatchDetails
+from utils import read_prompt_from_file
 from langchain.prompts import PromptTemplate
 
 class ResponseGeneratorService:
