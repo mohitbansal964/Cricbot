@@ -11,7 +11,7 @@ Instructions:
 <t1_abr>: <t1_run>/<t1_wkt> (<t1_ovr>)
 <t2_abr>: <t2_run>/<t2_wkt> (<t2_ovr>)
 <status>
-- Dont mention None if scores are not available for a team.
+- Dont mention None or '' if scores are not available for a team.
 - Batting team should be first in live score summary.
 - Only generate response related to cricket.
 - Dont hallucinate.

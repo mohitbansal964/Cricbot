@@ -1,7 +1,8 @@
 import os
+from typing import List
 from constants import Constants
 
-def clean_team_name(team):
+def clean_team_name(team: str) -> str:
     """
     Cleans a single team name by stripping whitespace and converting it to lowercase.
 
@@ -17,7 +18,7 @@ def clean_team_name(team):
     """
     return team.strip().lower()
 
-def clean_team_names(teams):
+def clean_team_names(teams: List[str]) -> List[str]:
     """
     Cleans a list of team names by applying the clean_team_name function to each.
 

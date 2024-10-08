@@ -20,6 +20,9 @@ class ResponseGeneratorService:
     get_live_score_response(user_input: str, match_details: MatchDetails) -> str
         Generates a response for live cricket scores based on user input and match details.
 
+    get_all_live_matches_response(user_input: str, live_matches: List[MatchDetails]) -> str
+        Generates a response listing all live cricket matches.
+
     get_fallback_response(user_input: str, reason: str) -> str
         Generates a fallback response when the input cannot be processed as expected.
 
@@ -28,6 +31,12 @@ class ResponseGeneratorService:
 
     __get_live_score_prompt_template() -> PromptTemplate
         Retrieves the template for live score prompts.
+
+    __get_all_live_matches_prompt(user_input: str, live_matches: List[MatchDetails]) -> str
+        Constructs the prompt for generating a response listing all live matches.
+
+    __get_all_live_matches_prompt_template() -> PromptTemplate
+        Retrieves the template for all live matches prompts.
 
     __get_fallback_prompt(user_input: str, reason: str) -> str
         Constructs the prompt for generating a fallback response.
@@ -67,6 +76,26 @@ class ResponseGeneratorService:
             The generated response content.
         """
         prompt = self.__get_live_score_prompt(user_input, match_details)
+        output = self.__llm_chain.invoke(prompt)
+        return output.content
+    
+    def get_all_live_matches_response(self, user_input: str, live_matches: List[MatchDetails]) -> str:
+        """
+        Generates a response listing all live cricket matches.
+
+        Parameters:
+        ----------
+        user_input : str
+            The input text from the user.
+        live_matches : List[MatchDetails]
+            A list of MatchDetails objects representing live matches.
+
+        Returns:
+        -------
+        str
+            The generated response content.
+        """
+        prompt = self.__get_all_live_matches_prompt(user_input, live_matches)
         output = self.__llm_chain.invoke(prompt)
         return output.content
 
@@ -134,6 +163,43 @@ class ResponseGeneratorService:
         """
         return PromptTemplate.from_template(
             template=read_prompt_from_file(Constants.LIVE_SCORE_RESPONSE_PROMPT)
+        )
+    
+    def __get_all_live_matches_prompt(self, user_input: str, live_matches: List[MatchDetails]) -> str:
+        """
+        Constructs the prompt for generating a response listing all live matches.
+
+        Parameters:
+        ----------
+        user_input : str
+            The input text from the user.
+        live_matches : List[MatchDetails]
+            A list of MatchDetails objects representing live matches.
+
+        Returns:
+        -------
+        str
+            The formatted prompt string.
+        """
+        prompt_template = self.__get_all_live_matches_prompt_template()
+        live_matches_str = "\n".join([f"{match.team_1.name} vs {match.team_2.name}" for match in live_matches])
+        prompt = prompt_template.format(
+            user_input=user_input,
+            live_matches=live_matches_str
+        )
+        return prompt
+    
+    def __get_all_live_matches_prompt_template(self) -> PromptTemplate:
+        """
+        Retrieves the template for all live matches prompts.
+
+        Returns:
+        -------
+        PromptTemplate
+            The template object for all live matches prompts.
+        """
+        return PromptTemplate.from_template(
+            template=read_prompt_from_file(Constants.ALL_LIVE_MATCHES_RESPONSE_PROMPT)
         )
 
     def __get_fallback_prompt(self, user_input: str, reason: str) -> str:
