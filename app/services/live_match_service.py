@@ -1,20 +1,20 @@
 from datetime import datetime
-from typing import Any, List
+from typing import Any, List, Tuple
 import requests
 
 from models import MatchDetails
 from utils import clean_team_name, clean_team_names
 
-class LiveScoreService:
+class LiveMatchService:
     """
     A service class to fetch and identify live cricket match scores.
 
     Methods:
     -------
-    fetch_live_score(team1: str, team2: str) -> MatchDetails
+    fetch_live_score(team1: str, team2: str) -> Tuple[MatchDetails, List[MatchDetails]]
         Fetches live scores and finds the match between the specified teams.
 
-    __fetch_all_live_matches() -> List[MatchDetails]
+    fetch_all_live_matches() -> List[MatchDetails]
         Retrieves all live matches from the external API.
 
     __process_matches_data(response: Any) -> List[MatchDetails]
@@ -24,7 +24,7 @@ class LiveScoreService:
         Finds a match between the specified teams from the list of matches.
     """
 
-    def fetch_live_score(self, team1: str, team2: str) -> MatchDetails:
+    def fetch_live_score(self, team1: str, team2: str) -> Tuple[MatchDetails, List[MatchDetails]]:
         """
         Fetches live scores and finds the match between the specified teams.
 
@@ -37,13 +37,14 @@ class LiveScoreService:
 
         Returns:
         -------
-        MatchDetails
-            The details of the match between the specified teams, or None if not found.
+        Tuple[MatchDetails, List[MatchDetails]]
+            A tuple containing the details of the match between the specified teams, 
+            or None if not found, and a list of all live matches.
         """
-        live_matches = self.__fetch_all_live_matches()
-        return self.__find_match(live_matches, team1, team2)
+        live_matches = self.fetch_all_live_matches()
+        return (self.__find_match(live_matches, team1, team2), live_matches)
 
-    def __fetch_all_live_matches(self) -> List[MatchDetails]:
+    def fetch_all_live_matches(self) -> List[MatchDetails]:
         """
         Retrieves all live matches from the external API.
 

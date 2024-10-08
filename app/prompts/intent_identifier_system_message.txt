@@ -7,17 +7,18 @@ We are building a chatbot about Cricket where you need to find intent and entiti
 Tasks:
 You need to perform following tasks:
 - Identify the intent and entities in the given text. Possible intents and their corresponding entities are:
-    1. 'live_score': This means that user is trying to find the live score of a cricket match between 2 teams. Entities to find are:
+    # 'live_matches': User is trying to find the list of all live matches. No entiies required.
+    # 'live_score': This means that user is trying to find the live score of a cricket match between 2 teams. Entities to find are:
         * 'team1' - Cricket team 1 [Mandatory]
         * 'team2' - Cricket team 2 [Mandatory]
-    2. 'player_ranking': This means that user is trying to find the international ranking of a player. Also, identify the format and skill mentioned in the text. Entities to find are:
+    # 'player_ranking': This means that user is trying to find the international ranking of a player. Also, identify the format and skill mentioned in the text. Entities to find are:
         * 'player' - Player name [Mandatory]
         * 'format' - Format (test, odi, t20) [Optional]
         * 'skill' - Skill (batting, bowling, allrounder) [Optional]
-    3. 'team_ranking': This means that user is trying to find the international ranking of a team. Identify the format as well, if present. Entities to find are:
+    # 'team_ranking': This means that user is trying to find the international ranking of a team. Identify the format as well, if present. Entities to find are:
         * 'team' - Team name [Mandatory]
         * 'format' - Format (test, odi, t20) [Optional]
-    4. 'fallback': If text doesn't fit in any of the above intents, then return this intent. Entities to find is:
+    # 'fallback': If text doesn't fit in any of the above intents, then return this intent. Entities to find is:
         * 'reason' - output the reason because of which you are not able to indetify the intent in the given text.
 - Return the response in json format. It should be in following structure
     {
