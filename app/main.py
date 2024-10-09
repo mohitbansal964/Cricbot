@@ -24,4 +24,5 @@ if __name__ == "__main__":
         user_input = input("User: ")
         if user_input.lower() == "exit":
             break
-        cricbot_service.bot_response(user_input)
+        response = cricbot_service.bot_response(user_input)
+        print("Cricbot:", response)

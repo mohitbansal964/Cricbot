@@ -47,7 +47,7 @@ class CricbotService:
         self.__live_match_service = LiveMatchService()
         self.__response_generator_service = ResponseGeneratorService(openai_api_key)
 
-    def bot_response(self, user_input: str):
+    def bot_response(self, user_input: str) -> str:
         """
         Processes the user input and prints the bot's response.
 
@@ -65,7 +65,7 @@ class CricbotService:
                 response = self.__handle_live_score_intent(user_input, intent_details)
             case _:
                 response = self.__handle_fallback_intent(user_input, intent_details)
-        print("Cricbot:", response)
+        return response
 
     def __handle_live_matches_intent(self, user_input: str) -> str:
         """
