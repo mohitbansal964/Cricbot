@@ -14,17 +14,29 @@ class LiveMatchService:
     fetch_live_score(team1: str, team2: str) -> Tuple[MatchDetails, List[MatchDetails]]
         Fetches live scores and finds the match between the specified teams.
 
-    fetch_all_live_matches() -> List[MatchDetails]
-        Retrieves all live matches from the external API.
+    fetch_all_live_matches(date: Optional[str] = None) -> List[MatchDetails]
+        Retrieves all live matches from the external API for a given date.
 
     __process_matches_data(response: Any) -> List[MatchDetails]
         Processes the API response to extract match details.
 
-    __find_match(matches: List[MatchDetails], team1: str, team2: str) -> MatchDetails
+    __create_match_details(event: dict, series_id: str, series_name: str) -> MatchDetails
+        Creates a MatchDetails object from event data.
+
+    __create_team_details(event: dict, team_key: str, score_prefix: str) -> TeamScoreDetails
+        Creates a TeamScoreDetails object from event data.
+
+    __safe_int(value: Optional[str]) -> Optional[int]
+        Safely converts a string to an integer.
+
+    __safe_float(value: Optional[str]) -> Optional[float]
+        Safely converts a string to a float.
+
+    __find_match(matches: List[MatchDetails], team1: str, team2: str) -> Optional[MatchDetails]
         Finds a match between the specified teams from the list of matches.
     """
 
-    def fetch_live_score(self, team1: str, team2: str) -> Tuple[MatchDetails, List[MatchDetails]]:
+    def fetch_live_score(self, team1: str, team2: str) -> Tuple[Optional[MatchDetails], List[MatchDetails]]:
         """
         Fetches live scores and finds the match between the specified teams.
 
@@ -37,33 +49,35 @@ class LiveMatchService:
 
         Returns:
         -------
-        Tuple[MatchDetails, List[MatchDetails]]
+        Tuple[Optional[MatchDetails], List[MatchDetails]]
             A tuple containing the details of the match between the specified teams, 
             or None if not found, and a list of all live matches.
         """
         live_matches = self.fetch_all_live_matches()
         return (self.__find_match(live_matches, team1, team2), live_matches)
 
-    def fetch_all_live_matches(self, date=None) -> List[MatchDetails]:
+    def fetch_all_live_matches(self, date: Optional[str] = None) -> List[MatchDetails]:
         """
-        Retrieves all live matches from the external API.
+        Retrieves all live matches from the external API for a given date.
+
+        Parameters:
+        ----------
+        date : Optional[str]
+            The date for which to fetch live matches in YYYYMMDD format. Defaults to today.
 
         Returns:
         -------
         List[MatchDetails]
             A list of MatchDetails objects representing live matches.
         """
-        if date is None:
-            cur_date = datetime.today().strftime("%Y%m%d")
-        else:
-            cur_date = date
+        cur_date = date if date else datetime.today().strftime("%Y%m%d")
         url = f"https://prod-public-api.livescore.com/v1/api/app/date/cricket/{cur_date}/5.30?locale=en&MD=1"
         response = requests.get(url)
         if response.ok:
             return self.__process_matches_data(response.json())
         else:
             return []
-    
+
     def __process_matches_data(self, response: Any) -> List[MatchDetails]:
         """
         Processes the API response to extract match details.
@@ -189,7 +203,7 @@ class LiveMatchService:
         except ValueError:
             return None
 
-    def __find_match(self, matches: List[MatchDetails], team1: str, team2: str) -> MatchDetails:
+    def __find_match(self, matches: List[MatchDetails], team1: str, team2: str) -> Optional[MatchDetails]:
         """
         Finds a match between the specified teams from the list of matches.
 
@@ -204,7 +218,7 @@ class LiveMatchService:
 
         Returns:
         -------
-        MatchDetails
+        Optional[MatchDetails]
             The details of the match between the specified teams, or None if not found.
         """
         if team1.lower() == team2.lower():

@@ -18,13 +18,13 @@ class IntentIdentifierService:
 
     Methods:
     -------
-    invoke(user_text: str) -> Any
+    invoke(user_text: str, live_matches: List[MatchDetails]) -> Any
         Processes the user input text to identify the intent and returns the result.
 
-    __get_llm_messages(user_text: str) -> List[BaseMessage]
+    __get_llm_messages(user_text: str, live_matches: List[MatchDetails]) -> List[BaseMessage]
         Constructs a list of messages for the language model, including system and human messages.
 
-    __get_system_message() -> SystemMessage
+    __get_system_message(live_matches: List[MatchDetails]) -> SystemMessage
         Retrieves the system message content from a predefined file.
 
     __get_human_message(user_text: str) -> HumanMessage
@@ -53,6 +53,8 @@ class IntentIdentifierService:
         ----------
         user_text : str
             The input text from the user.
+        live_matches : List[MatchDetails]
+            A list of live match details to be included in the system message.
 
         Returns:
         -------
@@ -71,6 +73,8 @@ class IntentIdentifierService:
         ----------
         user_text : str
             The input text from the user.
+        live_matches : List[MatchDetails]
+            A list of live match details to be included in the system message.
 
         Returns:
         -------
@@ -85,6 +89,11 @@ class IntentIdentifierService:
     def __get_system_message(self, live_matches: List[MatchDetails]) -> SystemMessage:
         """
         Retrieves the system message from a predefined file.
+
+        Parameters:
+        ----------
+        live_matches : List[MatchDetails]
+            A list of live match details to be included in the system message.
 
         Returns:
         -------

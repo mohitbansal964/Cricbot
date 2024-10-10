@@ -1,10 +1,8 @@
 from typing import Any, List, Optional
 from langchain_openai import ChatOpenAI
-from models import TeamScoreDetails
-from utils import get_live_matches_as_string
+from models import TeamScoreDetails, MatchDetails
+from utils import get_live_matches_as_string, read_prompt_from_file
 from constants import Constants
-from models import MatchDetails
-from utils import read_prompt_from_file
 from langchain.prompts import PromptTemplate
 
 class ResponseGeneratorService:
@@ -21,7 +19,7 @@ class ResponseGeneratorService:
     get_live_score_response(user_input: str, match_details: MatchDetails) -> str
         Generates a response for live cricket scores based on user input and match details.
 
-    get_all_live_matches_response(user_input: str, live_matches: List[MatchDetails]) -> str
+    get_all_live_matches_response(user_input: str, live_matches: List[MatchDetails], series: str = '') -> str
         Generates a response listing all live cricket matches.
 
     get_fallback_response(user_input: str, reason: str) -> str
@@ -30,10 +28,13 @@ class ResponseGeneratorService:
     __get_live_score_prompt(user_input: str, match_details: MatchDetails) -> str
         Constructs the prompt for generating a live score response.
 
+    __extract_team_details(team_details: Optional[TeamScoreDetails], prefix: str) -> dict
+        Extracts team details and formats them for prompt generation.
+
     __get_live_score_prompt_template() -> PromptTemplate
         Retrieves the template for live score prompts.
 
-    __get_all_live_matches_prompt(user_input: str, live_matches: List[MatchDetails]) -> str
+    __get_all_live_matches_prompt(user_input: str, live_matches: List[MatchDetails], series: str) -> str
         Constructs the prompt for generating a response listing all live matches.
 
     __get_all_live_matches_prompt_template() -> PromptTemplate
@@ -90,6 +91,8 @@ class ResponseGeneratorService:
             The input text from the user.
         live_matches : List[MatchDetails]
             A list of MatchDetails objects representing live matches.
+        series : str
+            The series name for filtering matches (optional).
 
         Returns:
         -------
@@ -179,7 +182,6 @@ class ResponseGeneratorService:
             f"{prefix}_inn2_dec": team_details.declared2,
         }
 
-
     def __get_live_score_prompt_template(self) -> PromptTemplate:
         """
         Retrieves the template for live score prompts.
@@ -203,6 +205,8 @@ class ResponseGeneratorService:
             The input text from the user.
         live_matches : List[MatchDetails]
             A list of MatchDetails objects representing live matches.
+        series : str
+            The series name for filtering matches.
 
         Returns:
         -------
