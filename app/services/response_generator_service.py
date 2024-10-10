@@ -1,6 +1,7 @@
-import json
-from typing import Any, List
+from typing import Any, List, Optional
 from langchain_openai import ChatOpenAI
+from models import TeamScoreDetails
+from utils import get_live_matches_as_string
 from constants import Constants
 from models import MatchDetails
 from utils import read_prompt_from_file
@@ -79,7 +80,7 @@ class ResponseGeneratorService:
         output = self.__llm_chain.invoke(prompt)
         return output.content
     
-    def get_all_live_matches_response(self, user_input: str, live_matches: List[MatchDetails]) -> str:
+    def get_all_live_matches_response(self, user_input: str, live_matches: List[MatchDetails], series: str = '') -> str:
         """
         Generates a response listing all live cricket matches.
 
@@ -95,7 +96,7 @@ class ResponseGeneratorService:
         str
             The generated response content.
         """
-        prompt = self.__get_all_live_matches_prompt(user_input, live_matches)
+        prompt = self.__get_all_live_matches_prompt(user_input, live_matches, series)
         output = self.__llm_chain.invoke(prompt)
         return output.content
 
@@ -138,19 +139,46 @@ class ResponseGeneratorService:
         prompt_template = self.__get_live_score_prompt_template()
         prompt = prompt_template.format(
             user_input=user_input,
-            t1_name=match_details.team_1.name,
-            t1_abr=match_details.team_1.abr,
-            t1_run=match_details.team_1.run,
-            t1_wkt=match_details.team_1.wicket,
-            t1_ovr=match_details.team_1.over,
-            t2_name=match_details.team_2.name,
-            t2_abr=match_details.team_2.abr,
-            t2_run=match_details.team_2.run,
-            t2_wkt=match_details.team_2.wicket,
-            t2_ovr=match_details.team_2.over,
+            format=match_details.format,
+            series=match_details.series_name,
+            **self.__extract_team_details(match_details.team1, prefix='t1'),
+            **self.__extract_team_details(match_details.team2, prefix='t2'),
             status=match_details.status
         )
         return prompt
+
+    def __extract_team_details(self, team_details: Optional[TeamScoreDetails], prefix: str) -> dict:
+        """
+        Extracts team details and formats them for prompt generation.
+
+        Parameters:
+        ----------
+        team_details : Optional[TeamScoreDetails]
+            The details of the team.
+        prefix : str
+            The prefix to use for formatting keys.
+
+        Returns:
+        -------
+        dict
+            A dictionary of formatted team details.
+        """
+        if not team_details:
+            return {}
+
+        return {
+            f"{prefix}_name": team_details.name,
+            f"{prefix}_abr": team_details.abr,
+            f"{prefix}_run": team_details.run,
+            f"{prefix}_wkt": team_details.wicket,
+            f"{prefix}_ovr": team_details.over,
+            f"{prefix}_dec": team_details.declared,
+            f"{prefix}_inn2_run": team_details.run2,
+            f"{prefix}_inn2_wkt": team_details.wicket2,
+            f"{prefix}_inn2_ovr": team_details.over2,
+            f"{prefix}_inn2_dec": team_details.declared2,
+        }
+
 
     def __get_live_score_prompt_template(self) -> PromptTemplate:
         """
@@ -165,7 +193,7 @@ class ResponseGeneratorService:
             template=read_prompt_from_file(Constants.LIVE_SCORE_RESPONSE_PROMPT)
         )
     
-    def __get_all_live_matches_prompt(self, user_input: str, live_matches: List[MatchDetails]) -> str:
+    def __get_all_live_matches_prompt(self, user_input: str, live_matches: List[MatchDetails], series: str) -> str:
         """
         Constructs the prompt for generating a response listing all live matches.
 
@@ -182,10 +210,10 @@ class ResponseGeneratorService:
             The formatted prompt string.
         """
         prompt_template = self.__get_all_live_matches_prompt_template()
-        live_matches_str = "\n".join([f"{match.team_1.name} vs {match.team_2.name}" for match in live_matches])
         prompt = prompt_template.format(
             user_input=user_input,
-            live_matches=live_matches_str
+            series=series,
+            live_matches=get_live_matches_as_string(live_matches)
         )
         return prompt
     

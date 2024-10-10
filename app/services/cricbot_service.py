@@ -56,18 +56,23 @@ class CricbotService:
         user_input : str
             The input text from the user.
         """
-        intent_details = self.__intent_identifier_service.invoke(user_input)
-        response = ""
-        match intent_details.get('intent'):
-            case 'live_matches':
-                response = self.__handle_live_matches_intent(user_input)
-            case 'live_score':
-                response = self.__handle_live_score_intent(user_input, intent_details)
-            case _:
-                response = self.__handle_fallback_intent(user_input, intent_details)
-        return response
+        try:
+            live_matches = self.__live_match_service.fetch_all_live_matches()
+            intent_details = self.__intent_identifier_service.invoke(user_input, live_matches)
+            response = ""
+            match intent_details.get('intent'):
+                case 'live_matches':
+                    response = self.__handle_live_matches_intent(user_input, intent_details)
+                case 'live_score':
+                    response = self.__handle_live_score_intent(user_input, intent_details)
+                case _:
+                    response = self.__handle_fallback_intent(user_input, intent_details)
+            return response
+        except Exception as e:
+            print(e)
+            return "Unable to generate response. Please try again later"
 
-    def __handle_live_matches_intent(self, user_input: str) -> str:
+    def __handle_live_matches_intent(self, user_input: str, intent_details: dict) -> str:
         """
         Handles the 'live_matches' intent and returns the appropriate response.
 
@@ -81,7 +86,16 @@ class CricbotService:
         str
             The generated response content for all live matches.
         """
+        entities = intent_details.get('entities', {})
         live_matches = self.__live_match_service.fetch_all_live_matches()
+        series = entities.get('series', '')
+        if series:
+            live_matches_of_series = [match for match in live_matches if match.series_name.lower() == series.lower()]
+            return  self.__response_generator_service.get_all_live_matches_response(
+            user_input, 
+            live_matches_of_series,
+            series
+        )
         return self.__response_generator_service.get_all_live_matches_response(
             user_input, 
             live_matches
