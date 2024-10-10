@@ -17,7 +17,7 @@ CRICBOT/
 │   │   ├── __init__.py
 │   │   └── match_details.py
 │   ├── prompts/
-│   │   ├── all_live_matches_response_prompt
+│   │   ├── all_live_matches_response_prompt.txt
 │   │   ├── fallback_response_prompt.txt
 │   │   ├── intent_identifier_system_message.txt
 │   │   └── live_score_response_prompt.txt
