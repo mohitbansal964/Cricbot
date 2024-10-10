@@ -2,7 +2,7 @@
 
 ## Overview
 
-Cricbot is a chatbot application designed to provide live cricket scores and handle various user intents. It leverages OpenAI's language models to understand user queries and generate appropriate responses.
+Cricbot is a chatbot application designed to provide live cricket scores and handle various user intents. It leverages OpenAI's language models to understand user queries and generate appropriate responses. The application is structured to ensure modularity and ease of maintenance.
 
 ## Directory Structure
 
@@ -17,6 +17,7 @@ CRICBOT/
 │   │   ├── __init__.py
 │   │   └── match_details.py
 │   ├── prompts/
+│   │   ├── all_live_matches_response_prompt
 │   │   ├── fallback_response_prompt.txt
 │   │   ├── intent_identifier_system_message.txt
 │   │   └── live_score_response_prompt.txt
@@ -30,6 +31,7 @@ CRICBOT/
 │   │   ├── __init__.py
 │   │   └── common_util.py
 │   ├── main.py
+│   └── cricbot_app.py
 ├── .env
 ├── .gitignore
 ├── README.md
@@ -91,12 +93,17 @@ Interact with the bot by typing your queries. Type "exit" to terminate the sessi
 - **Services**: Contains the core logic for intent identification, live score fetching, and response generation.
 - **Utils**: Provides utility functions for common tasks.
 
+## Recent Updates
+
+- **Streamlit Integration**: The application now includes a Streamlit interface for a more interactive user experience.
+- **Enhanced Error Handling**: Improved error handling mechanisms for better reliability.
+- **Modular Codebase**: Refactored code to enhance readability and maintainability.
+
 ## Future Enhancements
 
-- **Error Handling**: Improve error handling for network issues and invalid inputs.
 - **Logging**: Add logging for better monitoring and debugging.
 - **Testing**: Implement unit and integration tests to ensure reliability.
-- **User Interface**: Develop a GUI for a more interactive user experience.
+- **Advanced User Interface**: Develop a GUI for a more interactive user experience.
 
 ## Contributing
 
