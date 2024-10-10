@@ -1,7 +1,13 @@
 import os
 from typing import List
+from models.match_details import MatchDetails
 from constants import Constants
 
+def get_live_matches_as_string(live_matches: List[MatchDetails]) -> str: 
+    return "\n".join([
+        f"{match.team1.name} ({match.team1.abr}) vs {match.team2.name} ({match.team2.abr}) [Series: {match.series_name}]" 
+        for match in live_matches
+    ])
 def clean_team_name(team: str) -> str:
     """
     Cleans a single team name by stripping whitespace and converting it to lowercase.

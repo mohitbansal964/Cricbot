@@ -1,1 +1,1 @@
-from .match_details import MatchDetails
+from .match_details import MatchDetails, TeamScoreDetails
