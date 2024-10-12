@@ -116,7 +116,7 @@ class IntentIdentifierService:
     
     def __get_system_message_prompt_template_for_chain(self, parser: JsonOutputParser):
         return SystemMessagePromptTemplate.from_template(
-            template=read_prompt_from_file(Constants.INTENT_IDENTIFIER_SYS_MSG_FILE_NAME2),
+            template=read_prompt_from_file(Constants.INTENT_IDENTIFIER_SYS_MSG_FILE_NAME),
             input_variables=["live_matches"],
             partial_variables={"format_instructions": parser.get_format_instructions()},
         )

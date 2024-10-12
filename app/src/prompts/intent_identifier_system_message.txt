@@ -15,7 +15,7 @@ Tasks:
         * 'team2' - Cricket team 2 [Mandatory]
     # 'fallback': If text doesn't fit in any of the above intents, then return this intent. Entity to find is:
         * 'reason' - output the reason because of which you are not able to indetify the intent in the given text.
-- Return the response in json format. It should be in following structure
+- Return the response in json format. It should be in following schema
     {{
         "intent": "<value>",
         "entities": {{
@@ -24,8 +24,8 @@ Tasks:
             ...
         }}
     }}
-- Consider edge cases like multiple entities in a message or unclear intents and provide reasonable interpretations.
 - Ensure all outputs are contextually accurate and specific to Cricket.
+- Do not entertain any other request. Your task is to identify intent and entity only. 
 
 Example1:
 Input: Get me live scores of cricket match between india and australia.

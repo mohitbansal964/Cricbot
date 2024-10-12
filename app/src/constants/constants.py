@@ -15,7 +15,6 @@ class Constants:
 
     # File names for system messages and prompts
     INTENT_IDENTIFIER_SYS_MSG_FILE_NAME: str = "intent_identifier_system_message.txt"
-    INTENT_IDENTIFIER_SYS_MSG_FILE_NAME2: str = "intent_identifier_system_message2.txt"
     LIVE_SCORE_RESPONSE_PROMPT: str = "live_score_response_prompt.txt"
     ALL_LIVE_MATCHES_RESPONSE_PROMPT: str = "all_live_matches_response_prompt.txt"
     FALLBACK_RESPONSE_PROMPT: str = "fallback_response_prompt.txt"

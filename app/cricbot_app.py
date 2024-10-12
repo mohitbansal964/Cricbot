@@ -54,12 +54,13 @@ def handle_user_input():
         st.chat_message("user", avatar=avatars["user"]).write(user_input)
         
         # Create a placeholder for the loading spinner
-        with st.spinner("Generating response..."):
+        with st.spinner("Cricbot is typing..."):
             try:
-                metadata = generate_metadata(user_input=user_input)
-                response = generate_chain(get_openai_api_key(), metadata).invoke(metadata)
+                metadata = generate_metadata(user_input=user_input) 
+                response = st.chat_message("assistant", avatar=avatars["assistant"]).write_stream(
+                                    generate_chain(get_openai_api_key(), metadata).stream(metadata)
+                            )
                 st.session_state.messages.append({"role": "assistant", "content": response})
-                st.chat_message("assistant", avatar=avatars["assistant"]).write(response)
             except Exception as e:
                 print(e)
                 error_message = "Error generating response"
