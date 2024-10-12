@@ -3,6 +3,9 @@ from typing import List
 from src.models.match_details import MatchDetails
 from src.constants import Constants
 
+def generate_metadata(**kwargs)-> dict:
+    return kwargs
+
 def get_live_matches_as_string(live_matches: List[MatchDetails]) -> str: 
     return "\n".join([
         f"{match.team1.name} ({match.team1.abr}) vs {match.team2.name} ({match.team2.abr}) [Series: {match.series_name}]" 

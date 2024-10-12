@@ -7,29 +7,29 @@ Cricbot is a chatbot application designed to provide live cricket scores and han
 ## Directory Structure
 
 ```
-CRICBOT/
-│
+Cricbot/
 ├── app/
-│   ├── constants/
-│   │   ├── __init__.py
-│   │   └── constants.py
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── match_details.py
-│   ├── prompts/
-│   │   ├── all_live_matches_response_prompt.txt
-│   │   ├── fallback_response_prompt.txt
-│   │   ├── intent_identifier_system_message.txt
-│   │   └── live_score_response_prompt.txt
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── cricbot_service.py
-│   │   ├── intent_identifier_service.py
-│   │   ├── live_score_service.py
-│   │   └── response_generator_service.py
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   └── common_util.py
+│   ├── src/
+│   │    ├── constants/
+│   │    │   ├── __init__.py
+│   │    │   └── constants.py
+│   │    ├── models/
+│   │    │   ├── __init__.py
+│   │    │   └── match_details.py
+│   │    ├── prompts/
+│   │    │   ├── all_live_matches_response_prompt.txt
+│   │    │   ├── fallback_response_prompt.txt
+│   │    │   ├── intent_identifier_system_message.txt
+│   │    │   └── live_score_response_prompt.txt
+│   │    ├── services/
+│   │    │   ├── __init__.py
+│   │    │   ├── cricbot_service.py
+│   │    │   ├── intent_identifier_service.py
+│   │    │   ├── live_score_service.py
+│   │    │   └── response_generator_service.py
+│   │    ├── utils/
+│   │    │   ├── __init__.py
+│   │    │   └── common_util.py
 │   ├── main.py
 │   └── cricbot_app.py
 ├── .env

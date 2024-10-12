@@ -1,0 +1,1 @@
+from .cricbot_chain import generate_chain

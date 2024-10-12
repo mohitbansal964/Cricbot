@@ -1,5 +1,6 @@
 from typing import Any, List, Optional
 from langchain_openai import ChatOpenAI
+from src.enums import Intent
 from src.models import TeamScoreDetails, MatchDetails
 from src.utils import get_live_matches_as_string, read_prompt_from_file
 from src.constants import Constants
@@ -56,10 +57,31 @@ class ResponseGeneratorService:
         openai_api_key : str
             The API key for accessing the OpenAI service.
         """
-        self.__llm_chain = ChatOpenAI(
+        self.llm = ChatOpenAI(
             model=Constants.RESPONSE_GENERATOR_GPT_MODEL, 
             api_key=openai_api_key
         )
+    
+    def get_prompt(self, data: dict):
+        match data.get('intent'):
+            case Intent.live_score:
+                prompt = self.__get_live_score_prompt(
+                    data.get("user_input"), 
+                    data.get("match_score", {})
+                )
+            case Intent.live_matches:
+                prompt = self.__get_all_live_matches_prompt(
+                    data.get("user_input"), 
+                    data.get("live_matches", []),
+                    data.get("series")
+                )
+            case _:
+                prompt = self.__get_fallback_prompt(
+                    data.get("user_input"), 
+                    data.get("reason")
+                )
+        return prompt
+    
 
     def get_live_score_response(self, user_input: str, match_details: MatchDetails) -> str:
         """
@@ -78,7 +100,7 @@ class ResponseGeneratorService:
             The generated response content.
         """
         prompt = self.__get_live_score_prompt(user_input, match_details)
-        output = self.__llm_chain.invoke(prompt)
+        output = self.llm.invoke(prompt)
         return output.content
     
     def get_all_live_matches_response(self, user_input: str, live_matches: List[MatchDetails], series: str = '') -> str:
@@ -100,7 +122,7 @@ class ResponseGeneratorService:
             The generated response content.
         """
         prompt = self.__get_all_live_matches_prompt(user_input, live_matches, series)
-        output = self.__llm_chain.invoke(prompt)
+        output = self.llm.invoke(prompt)
         return output.content
 
     def get_fallback_response(self, user_input: str, reason: str) -> str:
@@ -120,7 +142,7 @@ class ResponseGeneratorService:
             The generated fallback response content.
         """
         prompt = self.__get_fallback_prompt(user_input, reason)
-        output = self.__llm_chain.invoke(prompt)
+        output = self.llm.invoke(prompt)
         return output.content
 
     def __get_live_score_prompt(self, user_input: str, match_details: MatchDetails) -> str:

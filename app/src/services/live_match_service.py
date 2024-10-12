@@ -53,10 +53,10 @@ class LiveMatchService:
             A tuple containing the details of the match between the specified teams, 
             or None if not found, and a list of all live matches.
         """
-        live_matches = self.fetch_all_live_matches()
+        live_matches = self.fetch_all_matches()
         return (self.__find_match(live_matches, team1, team2), live_matches)
 
-    def fetch_all_live_matches(self, date: Optional[str] = None) -> List[MatchDetails]:
+    def fetch_all_matches(self, date: Optional[datetime] = None) -> List[MatchDetails]:
         """
         Retrieves all live matches from the external API for a given date.
 
@@ -70,7 +70,7 @@ class LiveMatchService:
         List[MatchDetails]
             A list of MatchDetails objects representing live matches.
         """
-        cur_date = date if date else datetime.today().strftime("%Y%m%d")
+        cur_date = (date if date else datetime.today()).strftime("%Y%m%d")
         url = f"https://prod-public-api.livescore.com/v1/api/app/date/cricket/{cur_date}/5.30?locale=en&MD=1"
         response = requests.get(url)
         if response.ok:
