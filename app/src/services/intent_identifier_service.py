@@ -2,7 +2,8 @@ import json
 from typing import Any, List
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, BaseMessage, HumanMessage
-from langchain_core.prompts import SystemMessagePromptTemplate
+from langchain_core.prompts import SystemMessagePromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
 from src.models import MatchDetails
 from src.constants import Constants
 from src.utils import read_prompt_from_file, get_live_matches_as_string
@@ -40,7 +41,7 @@ class IntentIdentifierService:
         openai_api_key : str
             The API key for accessing the OpenAI service.
         """
-        self.__llm_chain = ChatOpenAI(
+        self.llm = ChatOpenAI(
             model=Constants.INTENT_IDENTIFIER_GPT_MODEL, 
             api_key=openai_api_key
         )
@@ -62,8 +63,16 @@ class IntentIdentifierService:
             The identified intent as a JSON object.
         """
         messages = self.__get_llm_messages(user_text, live_matches)
-        output = self.__llm_chain.invoke(messages)
+        output = self.llm.invoke(messages)
         return json.loads(output.content)
+    
+    def get_chat_prompt_template(self, parser: JsonOutputParser):
+        return ChatPromptTemplate.from_messages(
+            [
+                self.__get_system_message_prompt_template_for_chain(parser),
+                self.__get_human_message_prompt_template_for_chain()
+            ]
+        )
 
     def __get_llm_messages(self, user_text: str, live_matches: List[MatchDetails]) -> List[BaseMessage]:
         """
@@ -104,6 +113,19 @@ class IntentIdentifierService:
             template=read_prompt_from_file(Constants.INTENT_IDENTIFIER_SYS_MSG_FILE_NAME)
         )
         return system_msg_template.format(live_matches=get_live_matches_as_string(live_matches))
+    
+    def __get_system_message_prompt_template_for_chain(self, parser: JsonOutputParser):
+        return SystemMessagePromptTemplate.from_template(
+            template=read_prompt_from_file(Constants.INTENT_IDENTIFIER_SYS_MSG_FILE_NAME2),
+            input_variables=["live_matches"],
+            partial_variables={"format_instructions": parser.get_format_instructions()},
+        )
+    
+    def __get_human_message_prompt_template_for_chain(self):
+        return HumanMessagePromptTemplate.from_template(
+            template="{user_input}",
+            input_variables=["user_input"],
+        )
 
     def __get_human_message(self, user_text: str) -> HumanMessage:
         """
