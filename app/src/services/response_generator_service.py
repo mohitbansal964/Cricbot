@@ -12,7 +12,7 @@ class ResponseGeneratorService:
 
     Attributes:
     ----------
-    __llm_chain : ChatOpenAI
+    llm : ChatOpenAI
         An instance of ChatOpenAI configured with a specific model and API key.
 
     Methods:
@@ -62,7 +62,20 @@ class ResponseGeneratorService:
             api_key=openai_api_key
         )
     
-    def get_prompt(self, data: dict):
+    def get_prompt(self, data: dict) -> str:
+        """
+        Determines the appropriate prompt based on the intent in the provided data.
+
+        Parameters:
+        ----------
+        data : dict
+            A dictionary containing user input and intent details.
+
+        Returns:
+        -------
+        str
+            The constructed prompt string.
+        """
         match data.get('intent'):
             case Intent.live_score:
                 prompt = self.__get_live_score_prompt(
@@ -81,7 +94,6 @@ class ResponseGeneratorService:
                     data.get("reason")
                 )
         return prompt
-    
 
     def get_live_score_response(self, user_input: str, match_details: MatchDetails) -> str:
         """

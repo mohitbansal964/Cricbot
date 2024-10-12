@@ -11,7 +11,7 @@ class LiveMatchService:
 
     Methods:
     -------
-    fetch_live_score(team1: str, team2: str) -> Tuple[MatchDetails, List[MatchDetails]]
+    fetch_live_score(team1: str, team2: str) -> Tuple[Optional[MatchDetails], List[MatchDetails]]
         Fetches live scores and finds the match between the specified teams.
 
     fetch_all_live_matches(date: Optional[str] = None) -> List[MatchDetails]
