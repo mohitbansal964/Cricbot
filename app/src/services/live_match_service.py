@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Any, List, Optional, Tuple
 import requests
 
-from models import MatchDetails, TeamScoreDetails
-from utils import clean_team_name, clean_team_names
+from src.models import MatchDetails, TeamScoreDetails
+from src.utils import clean_team_name, clean_team_names
 
 class LiveMatchService:
     """

@@ -1,8 +1,8 @@
 from typing import Any, List, Optional
 from langchain_openai import ChatOpenAI
-from models import TeamScoreDetails, MatchDetails
-from utils import get_live_matches_as_string, read_prompt_from_file
-from constants import Constants
+from src.models import TeamScoreDetails, MatchDetails
+from src.utils import get_live_matches_as_string, read_prompt_from_file
+from src.constants import Constants
 from langchain.prompts import PromptTemplate
 
 class ResponseGeneratorService:

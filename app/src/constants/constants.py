@@ -11,7 +11,7 @@ class Constants:
     RESPONSE_GENERATOR_GPT_MODEL: str = "gpt-4o"
 
     # Base file path for storing prompt files
-    BASE_FILE_PATH: str = os.path.join("app", "prompts")
+    BASE_FILE_PATH: str = os.path.join("app", "src", "prompts")
 
     # File names for system messages and prompts
     INTENT_IDENTIFIER_SYS_MSG_FILE_NAME: str = "intent_identifier_system_message.txt"

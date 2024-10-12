@@ -3,9 +3,9 @@ from typing import Any, List
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, BaseMessage, HumanMessage
 from langchain_core.prompts import SystemMessagePromptTemplate
-from models import MatchDetails
-from constants import Constants
-from utils import read_prompt_from_file, get_live_matches_as_string
+from src.models import MatchDetails
+from src.constants import Constants
+from src.utils import read_prompt_from_file, get_live_matches_as_string
 
 class IntentIdentifierService:
     """

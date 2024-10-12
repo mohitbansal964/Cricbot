@@ -1,7 +1,7 @@
 import os
 from typing import List
-from models.match_details import MatchDetails
-from constants import Constants
+from src.models.match_details import MatchDetails
+from src.constants import Constants
 
 def get_live_matches_as_string(live_matches: List[MatchDetails]) -> str: 
     return "\n".join([

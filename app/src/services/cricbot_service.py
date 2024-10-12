@@ -1,4 +1,4 @@
-from constants import Constants
+from src.constants import Constants
 from .intent_identifier_service import IntentIdentifierService
 from .live_match_service import LiveMatchService
 from .response_generator_service import ResponseGeneratorService
