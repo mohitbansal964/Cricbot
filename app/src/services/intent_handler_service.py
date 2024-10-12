@@ -4,11 +4,49 @@ from src.enums import Intent
 from src.models import IntentDetails
 
 class IntentHandlerService:
+    """
+    A service class to handle user intents and fetch additional data related to cricket matches.
+
+    Attributes:
+    ----------
+    __live_match_service : LiveMatchService
+        An instance of LiveMatchService to fetch live match data.
+
+    Methods:
+    -------
+    get_addtional_data(data: dict) -> dict
+        Processes the input data to fetch additional information based on the identified intent.
+
+    __get_current_matches_intent_data(intent_details: IntentDetails) -> dict
+        Handles the 'live_matches' intent and returns relevant match data.
+
+    __get_live_score_intent_data(intent_details: IntentDetails) -> dict
+        Handles the 'live_score' intent and returns the match score or fallback data.
+
+    __get_fallback_intent_data(intent_details: IntentDetails) -> dict
+        Handles fallback scenarios when the intent is not recognized.
+    """
 
     def __init__(self):
+        """
+        Initializes the IntentHandlerService.
+        """
         self.__live_match_service = LiveMatchService()
 
     def get_addtional_data(self, data: dict) -> dict:
+        """
+        Processes the input data to fetch additional information based on the identified intent.
+
+        Parameters:
+        ----------
+        data : dict
+            The input data containing intent and entities.
+
+        Returns:
+        -------
+        dict
+            The enriched data with additional information based on the intent.
+        """
         intent_details = IntentDetails(**data)
         match intent_details.intent:
             case Intent.live_matches:
@@ -20,6 +58,19 @@ class IntentHandlerService:
         return {**data, **additional_data}
 
     def __get_current_matches_intent_data(self, intent_details: IntentDetails) -> dict:
+        """
+        Handles the 'live_matches' intent and returns relevant match data.
+
+        Parameters:
+        ----------
+        intent_details : IntentDetails
+            The details of the identified intent.
+
+        Returns:
+        -------
+        dict
+            Additional data for live matches.
+        """
         entities = intent_details.entities
         live_matches = self.__live_match_service.fetch_all_matches(entities.date)
         series = entities.series
@@ -36,6 +87,19 @@ class IntentHandlerService:
         return additional_data
 
     def __get_live_score_intent_data(self, intent_details: IntentDetails) -> dict:
+        """
+        Handles the 'live_score' intent and returns the match score or fallback data.
+
+        Parameters:
+        ----------
+        intent_details : IntentDetails
+            The details of the identified intent.
+
+        Returns:
+        -------
+        dict
+            Additional data for the live score or fallback information.
+        """
         entities = intent_details.entities
         match_score, live_matches = self.__live_match_service.fetch_live_score(
             entities.team1, 
@@ -61,6 +125,19 @@ class IntentHandlerService:
         return additional_data
 
     def __get_fallback_intent_data(self, intent_details: IntentDetails) -> dict:
+        """
+        Handles fallback scenarios when the intent is not recognized.
+
+        Parameters:
+        ----------
+        intent_details : IntentDetails
+            The details of the identified intent.
+
+        Returns:
+        -------
+        dict
+            Fallback data with a reason if available.
+        """
         entities = intent_details.entities
         if not entities.reason:
             return {
@@ -69,6 +146,3 @@ class IntentHandlerService:
                 }
             }
         return {}
-
-
-    
