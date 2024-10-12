@@ -57,9 +57,15 @@ def handle_user_input():
         with st.spinner("Cricbot is typing..."):
             try:
                 metadata = generate_metadata(user_input=user_input) 
-                response = st.chat_message("assistant", avatar=avatars["assistant"]).write_stream(
-                                    generate_chain(get_openai_api_key(), metadata).stream(metadata)
-                            )
+                chain = generate_chain(get_openai_api_key(), metadata)
+                if os.environ.get("ENABLE_CRICBOT_STREAMING"):
+                    response = st.chat_message("assistant", avatar=avatars["assistant"]).write_stream(
+                                        chain.stream(metadata)
+                                )
+                else:
+                    response = st.chat_message("assistant", avatar=avatars["assistant"]).write(
+                                        chain.invoke(metadata)
+                                )
                 st.session_state.messages.append({"role": "assistant", "content": response})
             except Exception as e:
                 print(e)
