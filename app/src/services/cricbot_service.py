@@ -3,6 +3,7 @@ from .intent_identifier_service import IntentIdentifierService
 from .live_match_service import LiveMatchService
 from .response_generator_service import ResponseGeneratorService
 
+@DeprecationWarning
 class CricbotService:
     """
     A service class for the Cricbot chatbot to handle user interactions and provide responses.

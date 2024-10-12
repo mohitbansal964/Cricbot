@@ -1,7 +1,8 @@
 import os
 from dotenv import find_dotenv, load_dotenv
 import streamlit as st
-from src.services import CricbotService
+from src.chains import generate_chain
+from src.utils import generate_metadata
 
 # Define avatars for assistant and user
 avatars = {
@@ -29,22 +30,6 @@ def get_openai_api_key() -> str:
         raise EnvironmentError("OPENAI_API_KEY not found in environment variables.")
     return api_key
 
-def initialize_chatbot(api_key: str) -> CricbotService:
-    """
-    Initializes the CricbotService with the provided API key.
-
-    Parameters:
-    ----------
-    api_key : str
-        The OpenAI API key.
-
-    Returns:
-    -------
-    CricbotService
-        An instance of CricbotService.
-    """
-    return CricbotService(api_key)
-
 def display_initial_messages():
     """
     Displays the initial message from the assistant.
@@ -55,7 +40,7 @@ def display_initial_messages():
     for msg in st.session_state.messages:
         st.chat_message(msg["role"], avatar=avatars[msg["role"]]).write(msg["content"])
 
-def handle_user_input(cricbot_service: CricbotService):
+def handle_user_input():
     """
     Handles user input and generates a response using CricbotService.
 
@@ -64,14 +49,15 @@ def handle_user_input(cricbot_service: CricbotService):
     cricbot_service : CricbotService
         An instance of CricbotService to generate responses.
     """
-    if prompt := st.chat_input():
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        st.chat_message("user", avatar=avatars["user"]).write(prompt)
+    if user_input := st.chat_input():
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        st.chat_message("user", avatar=avatars["user"]).write(user_input)
         
         # Create a placeholder for the loading spinner
         with st.spinner("Generating response..."):
             try:
-                response = cricbot_service.bot_response(prompt)
+                metadata = generate_metadata(user_input=user_input)
+                response = generate_chain(get_openai_api_key(), metadata).invoke(metadata)
                 st.session_state.messages.append({"role": "assistant", "content": response})
                 st.chat_message("assistant", avatar=avatars["assistant"]).write(response)
             except Exception as e:
@@ -87,10 +73,8 @@ def main():
     st.set_page_config(page_title="Cricbot", page_icon="🏏")
     st.title("🏏 Cricbot")
     initialize_environment()
-    api_key = get_openai_api_key()
-    cricbot_service = initialize_chatbot(api_key)
     display_initial_messages()
-    handle_user_input(cricbot_service)
+    handle_user_input()
 
 if __name__ == "__main__":
     main()

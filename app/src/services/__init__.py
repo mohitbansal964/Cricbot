@@ -1,4 +1,4 @@
-from .cricbot_service import CricbotService
+# from .cricbot_service import CricbotService
 from .intent_identifier_service import IntentIdentifierService
 from .live_match_service import LiveMatchService
 from .response_generator_service import ResponseGeneratorService
