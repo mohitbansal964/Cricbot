@@ -1,7 +1,7 @@
 import os
 from dotenv import find_dotenv, load_dotenv
 import streamlit as st
-from services import CricbotService
+from src.services import CricbotService
 
 # Define avatars for assistant and user
 avatars = {

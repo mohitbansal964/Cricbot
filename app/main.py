@@ -1,6 +1,6 @@
 import os
 from dotenv import find_dotenv, load_dotenv
-from services import CricbotService
+from src.services import CricbotService
 
 # Load environment variables from a .env file
 load_dotenv(find_dotenv(), override=True)
