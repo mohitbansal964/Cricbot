@@ -42,7 +42,7 @@ def display_initial_messages():
 
 def handle_user_input():
     """
-    Handles user input and generates a response using CricbotService.
+    Handles user input and generates a response using Cricbot langchain.
     """
     if user_input := st.chat_input():
         st.session_state.messages.append({"role": "user", "content": user_input})

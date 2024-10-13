@@ -95,68 +95,6 @@ class ResponseGeneratorService:
                 )
         return prompt
 
-    def get_live_score_response(self, user_input: str, match_details: MatchDetails) -> str:
-        """
-        Generates a response for live cricket scores based on user input and match details.
-
-        Parameters:
-        ----------
-        user_input : str
-            The input text from the user.
-        match_details : MatchDetails
-            The details of the cricket match.
-
-        Returns:
-        -------
-        str
-            The generated response content.
-        """
-        prompt = self.__get_live_score_prompt(user_input, match_details)
-        output = self.llm.invoke(prompt)
-        return output.content
-    
-    def get_all_live_matches_response(self, user_input: str, live_matches: List[MatchDetails], series: str = '') -> str:
-        """
-        Generates a response listing all live cricket matches.
-
-        Parameters:
-        ----------
-        user_input : str
-            The input text from the user.
-        live_matches : List[MatchDetails]
-            A list of MatchDetails objects representing live matches.
-        series : str
-            The series name for filtering matches (optional).
-
-        Returns:
-        -------
-        str
-            The generated response content.
-        """
-        prompt = self.__get_all_live_matches_prompt(user_input, live_matches, series)
-        output = self.llm.invoke(prompt)
-        return output.content
-
-    def get_fallback_response(self, user_input: str, reason: str) -> str:
-        """
-        Generates a fallback response when the input cannot be processed as expected.
-
-        Parameters:
-        ----------
-        user_input : str
-            The input text from the user.
-        reason : str
-            The reason for the fallback.
-
-        Returns:
-        -------
-        str
-            The generated fallback response content.
-        """
-        prompt = self.__get_fallback_prompt(user_input, reason)
-        output = self.llm.invoke(prompt)
-        return output.content
-
     def __get_live_score_prompt(self, user_input: str, match_details: MatchDetails) -> str:
         """
         Constructs the prompt for generating a live score response.

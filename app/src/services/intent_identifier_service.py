@@ -48,26 +48,6 @@ class IntentIdentifierService:
             model=Constants.INTENT_IDENTIFIER_GPT_MODEL, 
             api_key=openai_api_key
         )
-
-    def invoke(self, user_text: str, live_matches: List[MatchDetails]) -> Any:
-        """
-        Identifies the intent from the user's input text using the language model.
-
-        Parameters:
-        ----------
-        user_text : str
-            The input text from the user.
-        live_matches : List[MatchDetails]
-            A list of live match details to be included in the system message.
-
-        Returns:
-        -------
-        Any
-            The identified intent as a JSON object.
-        """
-        messages = self.__get_llm_messages(user_text, live_matches)
-        output = self.llm.invoke(messages)
-        return json.loads(output.content)
     
     def get_chat_prompt_template(self, parser: JsonOutputParser):
         """
@@ -90,46 +70,6 @@ class IntentIdentifierService:
             ]
         )
 
-    def __get_llm_messages(self, user_text: str, live_matches: List[MatchDetails]) -> List[BaseMessage]:
-        """
-        Constructs the list of messages to be sent to the language model.
-
-        Parameters:
-        ----------
-        user_text : str
-            The input text from the user.
-        live_matches : List[MatchDetails]
-            A list of live match details to be included in the system message.
-
-        Returns:
-        -------
-        List[BaseMessage]
-            A list containing the system and human messages.
-        """
-        return [
-            self.__get_system_message(live_matches),
-            self.__get_human_message(user_text)
-        ]
-
-    def __get_system_message(self, live_matches: List[MatchDetails]) -> SystemMessage:
-        """
-        Retrieves the system message from a predefined file.
-
-        Parameters:
-        ----------
-        live_matches : List[MatchDetails]
-            A list of live match details to be included in the system message.
-
-        Returns:
-        -------
-        SystemMessage
-            The system message containing the prompt content.
-        """
-        system_msg_template = SystemMessagePromptTemplate.from_template(
-            template=read_prompt_from_file(Constants.INTENT_IDENTIFIER_SYS_MSG_FILE_NAME)
-        )
-        return system_msg_template.format(live_matches=get_live_matches_as_string(live_matches))
-    
     def __get_system_message_prompt_template_for_chain(self, parser: JsonOutputParser):
         """
         Retrieves the system message prompt template for the language model chain.
@@ -163,19 +103,3 @@ class IntentIdentifierService:
             template="{user_input}",
             input_variables=["user_input"],
         )
-
-    def __get_human_message(self, user_text: str) -> HumanMessage:
-        """
-        Creates a human message from the user's input text.
-
-        Parameters:
-        ----------
-        user_text : str
-            The input text from the user.
-
-        Returns:
-        -------
-        HumanMessage
-            The human message object containing the user's input.
-        """
-        return HumanMessage(content=user_text)

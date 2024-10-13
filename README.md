@@ -24,6 +24,7 @@ Cricbot/
 │   │    ├── services/
 │   │    │   ├── __init__.py
 │   │    │   ├── intent_identifier_service.py
+│   │    │   ├── intent_handler_service.py
 │   │    │   ├── live_score_service.py
 │   │    │   └── response_generator_service.py
 │   │    ├── utils/
