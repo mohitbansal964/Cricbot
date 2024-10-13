@@ -70,6 +70,7 @@ def main():
     """
     st.set_page_config(page_title="Cricbot", page_icon="🏏")
     st.title("🏏 Cricbot")
+    st.info("Cricbot does not store chat history. It generates response based on latest message only.")
     initialize_environment()
     display_initial_messages()
     handle_user_input()
