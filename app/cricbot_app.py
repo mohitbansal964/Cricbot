@@ -47,25 +47,22 @@ def handle_user_input():
     if user_input := st.chat_input():
         st.session_state.messages.append({"role": "user", "content": user_input})
         st.chat_message("user", avatar=avatars["user"]).write(user_input)
-        
-        with st.spinner("Cricbot is typing..."):
-            try:
-                metadata = generate_metadata(user_input=user_input) 
-                chain = generate_chain(get_openai_api_key(), metadata)
-                if os.environ.get("ENABLE_CRICBOT_STREAMING"):
-                    response = st.chat_message("assistant", avatar=avatars["assistant"]).write_stream(
-                                        chain.stream(metadata)
-                                )
-                else:
-                    response = st.chat_message("assistant", avatar=avatars["assistant"]).write(
-                                        chain.invoke(metadata)
-                                )
-                st.session_state.messages.append({"role": "assistant", "content": response})
-            except Exception as e:
-                print(e)
-                error_message = "Error generating response"
-                st.session_state.messages.append({"role": "assistant", "content": error_message})
-                st.chat_message("assistant", avatar=avatars["assistant"]).write(error_message)
+        metadata = generate_metadata(user_input=user_input) 
+        chain = generate_chain(get_openai_api_key(), metadata)
+        with st.chat_message("assistant", avatar=avatars["assistant"]):
+            with st.spinner("Cricbot is typing..."):
+                try:
+                    if os.environ.get("ENABLE_CRICBOT_STREAMING"):
+                        response = st.write_stream(chain.stream(metadata))
+                    else:
+                        response = st.write(chain.invoke(metadata))
+                except Exception as e:
+                    print(e.with_traceback(e.__traceback__))
+                    response = "Cricbot is not able to generate response. Please try again later!"
+                    st.write(response)
+                finally:
+                    st.session_state.messages.append({"role": "assistant", "content": response})
+
 
 def main():
     """
