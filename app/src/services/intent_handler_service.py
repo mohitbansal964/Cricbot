@@ -103,7 +103,8 @@ class IntentHandlerService:
         entities = intent_details.entities
         match_score, live_matches = self.__live_match_service.fetch_live_score(
             entities.team1, 
-            entities.team2
+            entities.team2,
+            entities.date
         )
         if match_score is None and len(live_matches) > 0:
             additional_data = {

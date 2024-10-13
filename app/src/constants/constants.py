@@ -7,7 +7,7 @@ class Constants:
     """
 
     # Model identifiers for different GPT models used in the application
-    INTENT_IDENTIFIER_GPT_MODEL: str = "gpt-3.5-turbo"
+    INTENT_IDENTIFIER_GPT_MODEL: str = "gpt-4o"
     RESPONSE_GENERATOR_GPT_MODEL: str = "gpt-4o"
 
     # Base file path for storing prompt files

@@ -17,15 +17,9 @@ class ResponseGeneratorService:
 
     Methods:
     -------
-    get_live_score_response(user_input: str, match_details: MatchDetails) -> str
-        Generates a response for live cricket scores based on user input and match details.
+    get_prompt(data: dict) -> str
 
-    get_all_live_matches_response(user_input: str, live_matches: List[MatchDetails], series: str = '') -> str
-        Generates a response listing all live cricket matches.
-
-    get_fallback_response(user_input: str, reason: str) -> str
-        Generates a fallback response when the input cannot be processed as expected.
-
+    
     __get_live_score_prompt(user_input: str, match_details: MatchDetails) -> str
         Constructs the prompt for generating a live score response.
 

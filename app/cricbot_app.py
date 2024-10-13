@@ -7,7 +7,7 @@ from src.utils import generate_metadata
 # Define avatars for assistant and user
 avatars = {
     "assistant": "🏏",  # Cricket bat and ball emoji for the assistant
-    "user": "🙋‍♂️"       # Person raising hand emoji for the user
+    "user": "🙋‍♂️"     # Person raising hand emoji for the user
 }
 
 def initialize_environment():
@@ -24,6 +24,11 @@ def get_openai_api_key() -> str:
     -------
     str
         The OpenAI API key.
+
+    Raises:
+    ------
+    EnvironmentError
+        If the OpenAI API key is not found in environment variables.
     """
     api_key = os.environ.get('OPENAI_API_KEY')
     if not api_key:
@@ -49,20 +54,24 @@ def handle_user_input():
         st.chat_message("user", avatar=avatars["user"]).write(user_input)
         metadata = generate_metadata(user_input=user_input) 
         chain = generate_chain(get_openai_api_key(), metadata)
-        with st.chat_message("assistant", avatar=avatars["assistant"]):
+        is_streaming_enabled = os.environ.get("ENABLE_CRICBOT_STREAMING") == "True"
+        with st.chat_message("assistant", avatar=avatars["assistant"]), st.empty():
             with st.spinner("Cricbot is typing..."):
                 try:
-                    if os.environ.get("ENABLE_CRICBOT_STREAMING"):
-                        response = st.write_stream(chain.stream(metadata))
+                    if is_streaming_enabled:
+                        resp_stream = chain.stream(metadata)
                     else:
-                        response = st.write(chain.invoke(metadata))
+                        response = chain.invoke(metadata)
                 except Exception as e:
                     print(e.with_traceback(e.__traceback__))
                     response = "Cricbot is not able to generate response. Please try again later!"
-                    st.write(response)
-                finally:
-                    st.session_state.messages.append({"role": "assistant", "content": response})
-
+            
+            if is_streaming_enabled:
+                response = st.write_stream(resp_stream)
+            else:
+                st.write(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
+        
 
 def main():
     """

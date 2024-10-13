@@ -19,7 +19,7 @@ Cricbot/
 │   │    ├── prompts/
 │   │    │   ├── all_live_matches_response_prompt.txt
 │   │    │   ├── fallback_response_prompt.txt
-│   │    │   ├── intent_identifier_system_message.txt
+│   │    │   ├── intent_identifier_prompt.txt
 │   │    │   └── live_score_response_prompt.txt
 │   │    ├── services/
 │   │    │   ├── __init__.py

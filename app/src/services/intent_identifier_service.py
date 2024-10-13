@@ -1,3 +1,4 @@
+# Import necessary modules and classes
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -15,20 +16,8 @@ class IntentIdentifierService:
 
     Methods:
     -------
-    invoke(user_text: str, live_matches: List[MatchDetails]) -> Any
-        Processes the user input text to identify the intent and returns the result.
-
-    get_chat_prompt_template(parser: JsonOutputParser)
-        Constructs a chat prompt template for the language model.
-
-    __get_llm_messages(user_text: str, live_matches: List[MatchDetails]) -> List[BaseMessage]
-        Constructs a list of messages for the language model, including system and human messages.
-
-    __get_system_message(live_matches: List[MatchDetails]) -> SystemMessage
-        Retrieves the system message content from a predefined file.
-
-    __get_human_message(user_text: str) -> HumanMessage
-        Creates a human message object from the user input text.
+    get_prompt_template(parser: JsonOutputParser)
+        Constructs a prompt template for the language model.
     """
 
     def __init__(self, openai_api_key: str):
@@ -40,12 +29,13 @@ class IntentIdentifierService:
         openai_api_key : str
             The API key for accessing the OpenAI service.
         """
+        # Initialize the language model with the specified model and API key
         self.llm = ChatOpenAI(
             model=Constants.INTENT_IDENTIFIER_GPT_MODEL, 
             api_key=openai_api_key
         )
     
-    def get_prompt_template(self, parser: JsonOutputParser):
+    def get_prompt_template(self, parser: JsonOutputParser) -> PromptTemplate:
         """
         Constructs a chat prompt template for the language model.
 
@@ -56,9 +46,10 @@ class IntentIdentifierService:
 
         Returns:
         -------
-        ChatPromptTemplate
+        PromptTemplate
             The constructed chat prompt template.
         """
+        # Create a prompt template using a predefined template file and parser instructions
         return PromptTemplate.from_template(
             template=read_prompt_from_file(Constants.INTENT_IDENTIFIER_PROMPT),
             partial_variables={"format_instructions": parser.get_format_instructions()},
