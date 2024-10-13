@@ -8,11 +8,13 @@ Following are the list of live matches:
 
 Tasks:
 - Identify the intent and entities in the given text. Possible intents and their corresponding entities are:
-    # 'live_matches': User is trying to find the list of all live matches. Try to identify the series name from the text based on above list: Entity to find is:
-        # 'series' - Series from above list [Optional]
+    # 'live_matches': User is trying to find the list of all live matches. Try to identify the series name from the text based on above list. Also, try to indentify if date is given in the message. Entities to find are:
+        * 'series' - Series from above list [Optional]
+        * 'date' - Date found in the message. Convert the date in ISO format. If year is not present, then consider year 2024[Optional]
     # 'live_score': User is trying to find the live score of a cricket match between 2 teams. Check above list of live matches and identify the teams from the text. If you are not able to identify the teams, then return 'live_matches' intent. If teams are found, then return entities as:
         * 'team1' - Cricket team 1 [Mandatory]
         * 'team2' - Cricket team 2 [Mandatory]
+        * 'date' - Date found in the message. Convert the date in ISO format. If year is not present, then consider year 2024[Optional]
     # 'fallback': If text doesn't fit in any of the above intents, then return this intent. Entity to find is:
         * 'reason' - output the reason because of which you are not able to indetify the intent in the given text.
 - Return the response in json format. It should be in following schema
@@ -24,9 +26,16 @@ Tasks:
             ...
         }}
     }}
+- {format_instructions}
 - Ensure all outputs are contextually accurate and specific to Cricket.
-- Do not entertain any other request. Your task is to identify intent and entity only. 
+- Do not entertain any other request. Your task is to identify intent and entity only.
+- Make sure output is in json format with the given schema
 
+**User has given following input. Find the intent and entities**
+Input: {user_input}
+Output: <Generate json in the given schema>
+
+**Refer following examples for better clarity**
 Example1:
 Input: Get me live scores of cricket match between india and australia.
 Output: {{

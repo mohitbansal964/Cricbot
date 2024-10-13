@@ -29,8 +29,8 @@ def generate_chain(openai_api_key: str, metadata: dict):
     str_parser = StrOutputParser()
     
     # Create the processing chain
-    chain = (lambda x: {**metadata, "live_matches": get_live_matches_as_string(LiveMatchService().fetch_all_matches())}) \
-        | intent_identifier_service.get_chat_prompt_template(json_parser) \
+    chain = (lambda data: {**data, "live_matches": get_live_matches_as_string(LiveMatchService().fetch_all_matches())}) \
+        | intent_identifier_service.get_prompt_template(json_parser) \
         | intent_identifier_service.llm \
         | json_parser \
         | intent_handler_service.get_addtional_data \
