@@ -36,7 +36,7 @@ class LiveMatchService:
         Finds a match between the specified teams from the list of matches.
     """
 
-    def fetch_live_score(self, team1: str, team2: str) -> Tuple[Optional[MatchDetails], List[MatchDetails]]:
+    def fetch_live_score(self, team1: str, team2: str, date: Optional[datetime] = None) -> Tuple[Optional[MatchDetails], List[MatchDetails]]:
         """
         Fetches live scores and finds the match between the specified teams.
 
@@ -53,7 +53,7 @@ class LiveMatchService:
             A tuple containing the details of the match between the specified teams, 
             or None if not found, and a list of all live matches.
         """
-        live_matches = self.fetch_all_matches()
+        live_matches = self.fetch_all_matches(date)
         return (self.__find_match(live_matches, team1, team2), live_matches)
 
     def fetch_all_matches(self, date: Optional[datetime] = None) -> List[MatchDetails]:
