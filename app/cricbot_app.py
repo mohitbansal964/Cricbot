@@ -7,7 +7,7 @@ from src.utils import generate_metadata
 # Define avatars for assistant and user
 avatars = {
     "assistant": "🏏",  # Cricket bat and ball emoji for the assistant
-    "user": "🙋‍♂️"       # Person raising hand emoji for the user
+    "user": "🙋‍♂️"     # Person raising hand emoji for the user
 }
 
 def initialize_environment():
@@ -24,6 +24,11 @@ def get_openai_api_key() -> str:
     -------
     str
         The OpenAI API key.
+
+    Raises:
+    ------
+    EnvironmentError
+        If the OpenAI API key is not found in environment variables.
     """
     api_key = os.environ.get('OPENAI_API_KEY')
     if not api_key:
@@ -62,7 +67,6 @@ def handle_user_input():
                     st.write(response)
                 finally:
                     st.session_state.messages.append({"role": "assistant", "content": response})
-
 
 def main():
     """
